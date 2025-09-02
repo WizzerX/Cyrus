@@ -1,0 +1,8 @@
+# Ignore build, binaries, and intermediate files
+Binaries/
+DerivedDataCache/
+Intermediate/
+Saved/
+.vs/
+*.VC.db
+*.sln
