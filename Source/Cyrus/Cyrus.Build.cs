@@ -18,7 +18,8 @@ public class Cyrus : ModuleRules
 			"StateTreeModule",
 			"GameplayStateTreeModule",
 			"UMG",
-			"Slate"
+			"Slate",
+			"HTTP"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] { });

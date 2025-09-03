@@ -6,6 +6,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "CyrusGameMode.generated.h"
 
+
 /**
  *  Simple GameMode for a first person game
  */
@@ -16,6 +17,8 @@ class ACyrusGameMode : public AGameModeBase
 
 public:
 	ACyrusGameMode();
+
+	virtual void BeginPlay()override;
 };
 
 
