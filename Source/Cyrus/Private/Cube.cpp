@@ -70,7 +70,7 @@ void ACube::TakeDamage()
 void ACube::BeginPlay()
 {
 	Super::BeginPlay();
-	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("Begin Play"));
+	
     UpdateHealthWidget();
    
 

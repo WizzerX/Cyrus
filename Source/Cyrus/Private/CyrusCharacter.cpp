@@ -167,6 +167,6 @@ void ACyrusCharacter::Fire()
 
 
 
-	//UE_LOG(LogTemp, Error, TEXT("Fire IS CALLED!"));
+	
 
 }
