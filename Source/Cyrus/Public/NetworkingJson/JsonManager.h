@@ -29,14 +29,16 @@ struct FBoxTransform
 
 	GENERATED_BODY();
 
+
 	UPROPERTY(BlueprintReadOnly)
 	FString TypeName;
+	
 	UPROPERTY(BlueprintReadOnly)
 	FVector Location;
 	UPROPERTY(BlueprintReadOnly)
 	FRotator Rotation;
 	UPROPERTY(BlueprintReadOnly)
- FVector Scale;
+	FVector Scale;
 	
 
 

@@ -11,6 +11,21 @@ ACubeSpawner::ACubeSpawner()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+    static ConstructorHelpers::FClassFinder<ACube> CubeBPClass(
+   TEXT("/Game/_Game/Blueprints/Item/goodBox.good.Box"));
+
+    if (CubeBPClass.Succeeded())
+    {
+        CubeBlueprintClass = CubeBPClass.Class;
+    }
+    else
+    {
+        UE_LOG(LogTemp, Error, TEXT("Could not find BP_Cube! Check the path."));
+    }
+  
+
+
+
 }
 
 
@@ -45,13 +60,17 @@ void ACubeSpawner::Tick(float DeltaTime)
 
             if (FoundType)
             {
+                
+               
+
                 ACube* NewCube = GetWorld()->SpawnActor<ACube>(
-                    ACube::StaticClass(),
+                    CubeBlueprintClass,
                     Obj.Location,
                     Obj.Rotation
+                );
                     
 
-                );
+             
 
                 if (NewCube)
                 {

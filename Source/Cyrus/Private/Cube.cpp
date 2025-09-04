@@ -4,36 +4,75 @@
 #include "Cube.h"
 #include "NetworkingJson/JsonManager.h"
 #include "iostream"
+#include "Components/WidgetComponent.h"
+#include "Widget/CubeWidget.h"
+#include "Components/Widget.h"
+
+
 // Sets default values
 ACube::ACube()
 {
 	PrimaryActorTick.bCanEverTick = true;
-	Cube = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BOX"));
-	SetRootComponent(Cube);
 
+
+    Cube = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BOX"));
+    SetRootComponent(Cube);
+
+    USceneComponent* Root = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
+    Root->SetupAttachment(RootComponent);
     // Assign default mesh
     static ConstructorHelpers::FObjectFinder<UStaticMesh> MeshAsset(TEXT("/Engine/BasicShapes/Cube.Cube"));
     if (MeshAsset.Succeeded())
     {
         Cube->SetStaticMesh(MeshAsset.Object);
     }
-    static ConstructorHelpers::FObjectFinder<UMaterialInterface> MaterialAsset(TEXT("/Game/FirstPerson/m_Cube.m_Cube"));
+    static ConstructorHelpers::FObjectFinder<UMaterialInterface> MaterialAsset(TEXT("/Game/_Game/Material/m_Cube.m_Cube"));
     if (MaterialAsset.Succeeded())
     {
         Cube->SetMaterial(0, MaterialAsset.Object);
     }
 
+   
+    WidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("Widget"));
+    WidgetComponent->SetupAttachment(Root);
+   
+    // Force HUD-like behavior
+    WidgetComponent->SetWidgetSpace(EWidgetSpace::World);
+    WidgetComponent->SetDrawSize(FVector2D(200, 20));   // fixed pixel size
+    WidgetComponent->SetRelativeLocation(FVector(0, 0, 100)); // float above cube
+    WidgetComponent->SetRelativeScale3D(FVector(1.0f)); //
     
-	
+ 
+
+
+
 }
 
+
+void ACube::TakeDamage()
+{
+    Health -= 1;
+
+
+    UpdateHealthWidget();
+
+    if (Health <= 0.0f)
+    {
+        this->Destroy();
+    }
+
+
+
+
+
+}
 
 void ACube::BeginPlay()
 {
 	Super::BeginPlay();
 	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("Begin Play"));
-	
-
+    UpdateHealthWidget();
+   
 
 
 }
@@ -44,7 +83,23 @@ void ACube::Tick(float DeltaTime)
 	
 	Super::Tick(DeltaTime);
 
-   
+    if (WidgetComponent && GetWorld())
+    {
+        if (APlayerController* PC = GetWorld()->GetFirstPlayerController())
+        {
+            if (PC->PlayerCameraManager)
+            {
+                FVector CameraLocation = PC->PlayerCameraManager->GetCameraLocation();
+                FVector WidgetLocation = WidgetComponent->GetComponentLocation();
+
+                FVector ToCamera = CameraLocation - WidgetLocation;
+                ToCamera.Z = 0; // Optional: keep it upright (no tilt)
+
+                FRotator LookAtRotation = FRotationMatrix::MakeFromX(ToCamera).Rotator();
+                WidgetComponent->SetWorldRotation(LookAtRotation);
+            }
+        }
+    }
 
 
 }
@@ -55,6 +110,8 @@ void ACube::InitFromType(const FBoxDataType& Data)
     Health = Data.Health;
     Score = Data.Score;
     Color = Data.Color;
+    MaxHealth = Data.Health;
+    UpdateHealthWidget();
 
     // If you want to apply color to the mesh
     if (Cube && Cube->GetMaterial(0))
@@ -68,12 +125,23 @@ void ACube::InitFromType(const FBoxDataType& Data)
         }
     }
 
-    UE_LOG(LogTemp, Log, TEXT("Initialized Cube %s with Health: %d, Score: %d"),
-        *Name, Health, Score);
-
+    
 
 
 }
+
+void ACube::UpdateHealthWidget()
+{
+      if (UCubeWidget* Widget = Cast<UCubeWidget>(WidgetComponent->GetUserWidgetObject()))
+      { 
+          Widget->SetHealth(Health, MaxHealth);
+         
+          
+          UE_LOG(LogTemp, Error, TEXT("Progress Bar Called!"));
+      } 
+}
+
+
 
 
 

@@ -9,6 +9,10 @@
 #include "InputActionValue.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Cyrus.h"
+#include "Cube.h"
+#include "Sound/SoundBase.h"
+#include "Kismet/GameplayStatics.h"
+
 
 ACyrusCharacter::ACyrusCharacter()
 {
@@ -42,6 +46,11 @@ ACyrusCharacter::ACyrusCharacter()
 	// Configure character movement
 	GetCharacterMovement()->BrakingDecelerationFalling = 1500.0f;
 	GetCharacterMovement()->AirControl = 0.5f;
+
+	GunMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("GunMesh"));
+	GunMesh->AttachToComponent(GetFirstPersonCameraComponent(), FAttachmentTransformRules::SnapToTargetIncludingScale,FName("NONE"));
+	
+
 }
 
 void ACyrusCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -59,6 +68,8 @@ void ACyrusCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 		// Looking/Aiming
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ACyrusCharacter::LookInput);
 		EnhancedInputComponent->BindAction(MouseLookAction, ETriggerEvent::Triggered, this, &ACyrusCharacter::LookInput);
+
+		EnhancedInputComponent->BindAction(ShootAction, ETriggerEvent::Triggered, this, &ACyrusCharacter::Fire);
 	}
 	else
 	{
@@ -124,4 +135,38 @@ void ACyrusCharacter::DoJumpEnd()
 {
 	// pass StopJumping to the character
 	StopJumping();
+}
+
+void ACyrusCharacter::Fire()
+{
+	FVector StartLoc =FirstPersonCameraComponent->GetComponentLocation();
+	FVector ForwardLoc = FirstPersonCameraComponent->GetForwardVector();
+	FVector EndLoc = StartLoc + ForwardLoc * 8000;
+
+	FHitResult HitResult;
+	UGameplayStatics::PlaySound2D(GetWorld(), FireSound);
+	FCollisionQueryParams Params;
+	Params.AddIgnoredActor(this);
+
+
+	//Line Trace from Camera
+	GetWorld()->LineTraceSingleByChannel(HitResult, StartLoc, EndLoc, ECollisionChannel::ECC_WorldStatic, Params);
+	//DrawDebugLine(GetWorld(), StartLoc, EndLoc, FColor::Red, false, 5.f);
+
+	if (HitResult.bBlockingHit)
+	{
+		ACube* cube = Cast<ACube>(HitResult.GetActor());
+		
+		if (cube)
+		{
+			cube->TakeDamage();
+		}
+
+	}
+
+
+
+
+	//UE_LOG(LogTemp, Error, TEXT("Fire IS CALLED!"));
+
 }

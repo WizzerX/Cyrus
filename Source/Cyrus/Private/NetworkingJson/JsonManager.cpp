@@ -102,7 +102,7 @@ bool UJsonManager::ParseJSON(const FString& JsonString, TArray<FBoxDataType>& Ou
             FVector Rot = GetVec(TEXT("rotation"));
             ObjData.Rotation = FRotator(Rot.X, Rot.Y, Rot.Z);
             ObjData.Scale = GetVec(TEXT("scale"));
-
+            
             OutObjects.Add(ObjData);
         }
     }

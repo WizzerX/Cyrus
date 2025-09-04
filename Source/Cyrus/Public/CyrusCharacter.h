@@ -33,6 +33,10 @@ class ACyrusCharacter : public ACharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FirstPersonCameraComponent;
 
+
+
+
+
 protected:
 
 	/** Jump Input Action */
@@ -43,6 +47,11 @@ protected:
 	UPROPERTY(EditAnywhere, Category ="Input")
 	UInputAction* MoveAction;
 
+
+	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputAction* ShootAction;
+
+
 	/** Look Input Action */
 	UPROPERTY(EditAnywhere, Category ="Input")
 	class UInputAction* LookAction;
@@ -50,6 +59,7 @@ protected:
 	/** Mouse Look Input Action */
 	UPROPERTY(EditAnywhere, Category ="Input")
 	class UInputAction* MouseLookAction;
+
 	
 public:
 	ACyrusCharacter();
@@ -78,6 +88,8 @@ protected:
 	UFUNCTION(BlueprintCallable, Category="Input")
 	virtual void DoJumpEnd();
 
+
+	void Fire();
 protected:
 
 	/** Set up input action bindings */
@@ -93,5 +105,14 @@ public:
 	UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
 
 	virtual void Tick(float DeltaTime) override;
+
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	USoundBase* FireSound;
+
+public:
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
+	UStaticMeshComponent* GunMesh;
 };
 

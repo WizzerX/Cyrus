@@ -7,7 +7,7 @@
 #include "NetworkingJson/JsonManager.h"
 #include "CubeSpawner.generated.h"
 
-
+class ACube;
 
 UCLASS()
 class CYRUS_API ACubeSpawner : public AActor
@@ -24,7 +24,8 @@ public:
 	bool bHasSpawned = false;
 
 	
-
+	UPROPERTY(EditAnywhere, Category = "Spawning")
+	TSubclassOf<ACube> CubeBlueprintClass;
 
 
 protected:

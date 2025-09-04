@@ -4,7 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+
 #include "Cube.generated.h"
+
 
 UCLASS()
 class CYRUS_API ACube : public AActor
@@ -27,10 +29,20 @@ public:
 	FColor Color;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int Health;
+	float Health;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int Score;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UWidgetComponent* WidgetComponent;
+
+	void TakeDamage();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
+	TSubclassOf<ACube> CubeBlueprintClass;
+
+
 
 
 protected:
@@ -45,5 +57,7 @@ public:
 
 	UFUNCTION()
 	void InitFromType(const FBoxDataType& Data);
+	float MaxHealth;
 
+	void UpdateHealthWidget();
 };
