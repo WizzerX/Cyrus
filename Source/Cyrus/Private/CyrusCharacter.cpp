@@ -66,6 +66,13 @@ void ACyrusCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 	}
 }
 
+void ACyrusCharacter::Tick(float DeltaTime)
+{
+
+	
+
+}
+
 
 void ACyrusCharacter::MoveInput(const FInputActionValue& Value)
 {

@@ -4,46 +4,35 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Cube.generated.h"
+#include "NetworkingJson/JsonManager.h"
+#include "CubeSpawner.generated.h"
+
+
 
 UCLASS()
-class CYRUS_API ACube : public AActor
+class CYRUS_API ACubeSpawner : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	ACube();
+	ACubeSpawner();
 
-	UPROPERTY(EditAnywhere)
-	UStaticMeshComponent* Cube;
+
+	UJsonManager* JsonManager;
+
+	bool bHasSpawned = false;
 
 	
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FString Name;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FColor Color;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int Health;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int Score;
 
 
 protected:
-
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 public:	
-
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
-	UFUNCTION()
-	void InitFromType(const FBoxDataType& Data);
 
 };

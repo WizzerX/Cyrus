@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
+#include "NetworkingJson/JsonManager.h"
+
 #include "CyrusCharacter.generated.h"
 
 class UInputComponent;
@@ -90,5 +92,6 @@ public:
 	/** Returns first person camera component **/
 	UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
 
+	virtual void Tick(float DeltaTime) override;
 };
 
